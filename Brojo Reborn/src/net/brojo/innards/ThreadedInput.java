@@ -3,7 +3,8 @@ package net.brojo.innards;
 import java.io.BufferedReader;
 import java.io.Console;
 
-import net.brojo.irc.Bot;
+import net.brojo.irc.IConnector;
+import net.brojo.message.Message;
 
 public class ThreadedInput extends Thread {
 
@@ -11,9 +12,9 @@ public class ThreadedInput extends Thread {
 	
 	private BufferedReader reader;
 	
-	private Bot bot;
+	private IConnector bot;
 
-	public ThreadedInput(Bot bot, BufferedReader reader) {
+	public ThreadedInput(IConnector bot, BufferedReader reader) {
 		super("BrojoBot Input Thread");
 		this.reader = reader;
 		this.bot = bot;
@@ -41,12 +42,18 @@ public class ThreadedInput extends Thread {
 					
 					parseIO(serverMsg);
 
+					//TODO: Eventually outsource this to a simple bot.processInput call
 					if (serverMsg.split(" :", 1)[0].contains(" PRIVMSG ")) {
-						message = new net.brojo.message.Message(serverMsg.split("PRIVMSG")[0].split("!")[0].substring(1), 
-								serverMsg.split("PRIVMSG")[1].split(" :")[0].substring(1), 
-								serverMsg.split(serverMsg.split("PRIVMSG")[1].split(" :")[0].substring(1) + " :", 2)[1]);
+						message = Message.createMessageFromRaw(serverMsg);
+						
+						if (message.getContents().toLowerCase().equals("r brojobot")) {
+							bot.send(message.getRecipient(), "Hello, " + message.getSender());
+						}
+						
 						
 						//bot.send(message.getSender(), message.getContents());
+						
+						message = null;
 					}
 				}
 			} catch (Exception e) {

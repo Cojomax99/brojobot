@@ -1,6 +1,6 @@
 package net.brojo.irc;
 
-public interface Bot {
+public interface IConnector {
 
 	/**
 	 * method that is an intermediary between the input and output threads

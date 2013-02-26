@@ -19,6 +19,12 @@ public class Message {
 	 * Contents of message
 	 */
 	private String contents;
+	
+	public static Message createMessageFromRaw(String serverMsg) {
+		return new Message(serverMsg.split("PRIVMSG")[0].split("!")[0].substring(1), 
+				serverMsg.split("PRIVMSG")[1].split(" :")[0].substring(1), 
+				serverMsg.split(serverMsg.split("PRIVMSG")[1].split(" :")[0].substring(1) + " :", 2)[1]);
+	}
 
 	public static Message createMessage(String input) {
 

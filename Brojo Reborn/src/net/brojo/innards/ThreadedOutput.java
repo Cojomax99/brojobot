@@ -4,12 +4,12 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import net.brojo.irc.Bot;
+import net.brojo.irc.IConnector;
 import net.brojo.message.Message;
 
 public class ThreadedOutput extends Thread {
 	
-	private Bot bot;
+	private IConnector bot;
 
 	private boolean isRunning = false;
 	
@@ -17,7 +17,7 @@ public class ThreadedOutput extends Thread {
 	
 	private final ConcurrentLinkedQueue<Message> messageQueue = new ConcurrentLinkedQueue<Message>();
 	
-	public ThreadedOutput(Bot bot, BufferedWriter writer) {
+	public ThreadedOutput(IConnector bot, BufferedWriter writer) {
 		super("BrojoBot Output Thread");
 		this.writer = writer;
 		this.bot = bot;

@@ -15,7 +15,7 @@ import net.brojo.innards.ThreadedInput;
 import net.brojo.innards.ThreadedOutput;
 import net.brojo.message.Message;
 
-public class BrojoBot implements Bot {
+public class BrojoBot implements IConnector {
 
 	/**
 	 * UserInfo object that stores all data about this user
@@ -35,11 +35,7 @@ public class BrojoBot implements Bot {
 	public BrojoBot() {
 		try {
 			userInfo = new UserInfo("BrojoBot.xml");
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
