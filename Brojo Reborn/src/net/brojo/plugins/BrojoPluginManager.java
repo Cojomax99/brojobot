@@ -15,34 +15,17 @@ public class BrojoPluginManager {
 	/**
 	 * Holds all loaded plugin Class objects for processing when a message is received, mapped to whether the plugin is loaded or not
 	 */
-	private static HashMap<Class<? extends BrojoPlugin>, Boolean> pluginInstances = new HashMap<Class<? extends BrojoPlugin>, Boolean>();
+	private HashMap<Class<? extends BrojoPlugin>, Boolean> pluginInstances = new HashMap<Class<? extends BrojoPlugin>, Boolean>();
 	
-	/**
-	 * Singleton instance
-	 */
-	private static BrojoPluginManager instance;
-	
-	private BrojoPluginManager() {
+	public BrojoPluginManager() {
 		
 	}
-	
-	/**
-	 * Get the singleton instance
-	 * @return Singleton instance
-	 */
-	public BrojoPluginManager getInstance() {
-		if (instance == null) {
-			instance = new BrojoPluginManager();
-		}
-		
-		return instance;
-	}
-	
+
 	/**
 	 * Called by the main implementer, handles all plugin recognition/instantiation
 	 * @param m Message received from server
 	 */
-	public static void onMessageReceived(Message m) {
+	public void onMessageReceived(Message m) {
 		for (Class<? extends BrojoPlugin> clazz : pluginInstances.keySet()) {
 			try {
 				Method accepts = clazz.getDeclaredMethod("accepts", Boolean.TYPE);
@@ -62,7 +45,7 @@ public class BrojoPluginManager {
 	 * Sets the mapping in pluginInstances so that this plugin cannot be "loaded"
 	 * @param plugin BrojoPlugin to be "unloaded"
 	 */
-	public static void unloadPlugin(Class<? extends BrojoPlugin> plugin) {
+	public void unloadPlugin(Class<? extends BrojoPlugin> plugin) {
 		System.err.println("Unloading plugin: " + pluginInstances.get(plugin));
 		pluginInstances.put(plugin, Boolean.valueOf(false));
 	}
@@ -71,7 +54,7 @@ public class BrojoPluginManager {
 	 * Sets the mapping in pluginInstances so that this plugin can be "loaded"
 	 * @param plugin BrojoPlugin to be "loaded"
 	 */
-	public static void loadPlugin(Class<? extends BrojoPlugin> plugin) {
+	public void loadPlugin(Class<? extends BrojoPlugin> plugin) {
 		System.err.println("Loading plugin: " + pluginInstances.get(plugin));
 		pluginInstances.put(plugin, Boolean.valueOf(true));
 	}

@@ -2,18 +2,14 @@ package net.brojo.irc;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
-
 import net.brojo.innards.ThreadedInput;
 import net.brojo.innards.ThreadedOutput;
 import net.brojo.message.Message;
+import net.brojo.plugins.BrojoPluginManager;
 
 public class BrojoBot implements IConnector {
 
@@ -32,8 +28,14 @@ public class BrojoBot implements IConnector {
 	 */
 	private ThreadedOutput output;
 	
+	/**
+	 * Plugin manager instance for this implementor
+	 */
+	private BrojoPluginManager pluginManager;
+	
 	public BrojoBot() {
 		try {
+			pluginManager = new BrojoPluginManager();
 			userInfo = new UserInfo("BrojoBot.xml");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -45,6 +47,8 @@ public class BrojoBot implements IConnector {
 	 */
 	private void start() {
 		try{
+			//load plugins
+			
 			final Socket sock = new Socket("irc.esper.net",6667);
 
 			input = new ThreadedInput(this, new BufferedReader(new InputStreamReader(sock.getInputStream())));
