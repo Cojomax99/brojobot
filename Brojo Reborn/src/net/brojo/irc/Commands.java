@@ -14,6 +14,7 @@ public class Commands {
 	}
 	
 	public static void NICK(IConnector impl, String newNick) {
+		impl.getUserInfo().setNick(newNick);
 		impl.sendf("NICK", newNick);
 	}
 	

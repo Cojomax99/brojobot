@@ -11,6 +11,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class InfoMarshaller{
@@ -37,6 +39,10 @@ public class InfoMarshaller{
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		doc = dBuilder.parse(fXmlFile);
+	}
+	
+	private Node getNode(String attrib) {
+		return ((Element) doc.getElementsByTagName(NODE_NAME).item(0)).getElementsByTagName(attrib).item(0);
 	}
 	
 	private String getAttribute(String attrib) {
@@ -70,6 +76,14 @@ public class InfoMarshaller{
 	
 	public List<String> getChannels() {
 		return Arrays.asList(getAttribute("channels").split(",", 50));
+	}
+
+	public boolean isOp(String sender) {
+		return Arrays.asList(getAttribute("ops").split(",", 50)).contains(sender);
+	}
+
+	public void setNick(String newNick) {
+		getNode("nick").setNodeValue(newNick);
 	}
 	
 	//TODO: Setters

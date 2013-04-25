@@ -108,4 +108,10 @@ public class BrojoBot implements IConnector {
 		pluginManager.onMessageReceived(msg);		
 	}
 
+	@Override
+	public void setNick(String nick) {
+		this.userInfo.setNick(newNick);
+		Commands.NICK(this, nick);
+	}
+
 }

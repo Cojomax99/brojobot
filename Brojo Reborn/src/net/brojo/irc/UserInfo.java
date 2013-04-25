@@ -80,6 +80,14 @@ public class UserInfo {
 	public List<String> getChannels() {
 		return infoMarshaller.getChannels();
 	}
+
+	public boolean isOp(String sender) {
+		return infoMarshaller.isOp(sender);
+	}
+
+	public void setNick(String newNick) {
+		infoMarshaller.setNick(newNick);
+	}
 	
 	//TODO: Setters
 

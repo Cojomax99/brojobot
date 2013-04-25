@@ -35,7 +35,7 @@ public class EpicTalePlugin extends BrojoPlugin {
 	 * @return whether this plugin should be loaded
 	 */
 	public static boolean accepts(Message m) {
-		return m.getContents().toLowerCase().equals(",epictale");
+		return m.getContents().toLowerCase().startsWith(",epictale");
 	}
  
 	@Override

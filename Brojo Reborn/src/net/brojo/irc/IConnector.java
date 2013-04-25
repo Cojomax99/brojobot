@@ -40,4 +40,10 @@ public interface IConnector {
 	 * @param msg Raw message encapsulated into a Message object
 	 */
 	public void onMessageReceived(String serverMsg, Message msg);
+
+	/**
+	 * Changes the nick of the user
+	 * @param nick New nick
+	 */
+	public void setNick(String nick);
 }
