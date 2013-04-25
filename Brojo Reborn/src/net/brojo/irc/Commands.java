@@ -49,5 +49,25 @@ public class Commands {
 			impl.sendf("JOIN %s", s);
 		}
 	}
+	
+	/**
+	 * Send CTCP message to target
+	 * @param impl
+	 * @param target
+	 * @param message
+	 */
+	public static void CTCP(IConnector impl, String target, String message) {
+		impl.sendf("PRIVMSG %s :\u0001%s\u0001", target, message);
+	}
+	
+	/**
+	 * Send notice to target
+	 * @param impl
+	 * @param target
+	 * @param message
+	 */
+	public static void NOTICE(IConnector impl, String target, String message) {
+		impl.sendf("NOTICE %s :\u0001%s\u0001", target, message);
+	}
 
 }

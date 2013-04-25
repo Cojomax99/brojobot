@@ -110,8 +110,15 @@ public class BrojoBot implements IConnector {
 
 	@Override
 	public void setNick(String nick) {
-		this.userInfo.setNick(newNick);
+		this.userInfo.setNick(nick);
 		Commands.NICK(this, nick);
+	}
+
+	@Override
+	public void onCTCPReceived(String sender, String msg) {
+		if(msg.toLowerCase().equals("version")){
+			Commands.NOTICE(this, sender, "VERSION BrojoBot "+userInfo.getVersion());
+		}
 	}
 
 }

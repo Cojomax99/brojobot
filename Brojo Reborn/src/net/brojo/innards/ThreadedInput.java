@@ -51,7 +51,11 @@ public class ThreadedInput extends Thread {
 							bot.send(message.getRecipient(), "Hello, " + message.getSender());
 						}
 						
-						bot.onMessageReceived(serverMsg, message);
+						if(message.getContents().toLowerCase().startsWith("\u0001")){
+							bot.onCTCPReceived(message.getSender(), message.getContents().toLowerCase().split("\u0001")[1]);
+						}else{
+							bot.onMessageReceived(serverMsg, message);
+						}
 						
 						message = null;
 					} else

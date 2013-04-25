@@ -6,6 +6,6 @@
   <version>0.01</version>
   <quitmsg>Goodbye : (</quitmsg>
   <pass>genericpassword</pass>
-  <channels>#Tropicraft,#BrojoBot</channels>
+  <channels>#BrojoBot</channels>
   <ops>Cojo,Cojosan</ops>
 </brojo>

@@ -46,4 +46,11 @@ public interface IConnector {
 	 * @param nick New nick
 	 */
 	public void setNick(String nick);
+
+	/**
+	 * Called when a CTCP message is recieved from a user
+	 * @param sender The sender of the CTCP message
+	 * @param msg CTCP message
+	 */
+	public void onCTCPReceived(String sender, String msg);
 }
