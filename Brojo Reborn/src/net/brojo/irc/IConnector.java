@@ -1,5 +1,11 @@
 package net.brojo.irc;
 
+import net.brojo.message.Message;
+
+/**
+ * Interface to be implemented by a client
+ *
+ */
 public interface IConnector {
 
 	/**
@@ -27,4 +33,11 @@ public interface IConnector {
 	 * @return getUserInfo
 	 */
 	public UserInfo getUserInfo();
+	
+	/**
+	 * Called when a message is received from the server
+	 * @param serverMsg Raw message received from the server
+	 * @param msg Raw message encapsulated into a Message object
+	 */
+	public void onMessageReceived(String serverMsg, Message msg);
 }

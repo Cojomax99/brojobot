@@ -1,6 +1,7 @@
 package net.brojo.irc;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -39,6 +40,11 @@ public class UserInfo {
 	private String quitmsg;
 	
 	/**
+	 * Channels this user is in
+	 */
+	private List<String> channels;
+	
+	/**
 	 * Marshaller in charge of getting and setting of user data to/from a file
 	 */
 	private InfoMarshaller infoMarshaller;
@@ -69,6 +75,10 @@ public class UserInfo {
 	
 	public String getNick() {
 		return infoMarshaller.getNick();
+	}
+	
+	public List<String> getChannels() {
+		return infoMarshaller.getChannels();
 	}
 	
 	//TODO: Setters

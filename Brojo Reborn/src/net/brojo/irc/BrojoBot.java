@@ -5,11 +5,14 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.net.URL;
+import java.net.URLConnection;
 
 import net.brojo.innards.ThreadedInput;
 import net.brojo.innards.ThreadedOutput;
 import net.brojo.message.Message;
-import net.brojo.plugins.BrojoPluginManager;
+import net.brojo.pluginimpl.BrojoPluginLoader;
+import net.brojo.pluginimpl.BrojoPluginManager;
 
 public class BrojoBot implements IConnector {
 
@@ -31,11 +34,13 @@ public class BrojoBot implements IConnector {
 	/**
 	 * Plugin manager instance for this implementor
 	 */
-	private BrojoPluginManager pluginManager;
+	public BrojoPluginManager pluginManager;
 	
 	public BrojoBot() {
 		try {
-			pluginManager = new BrojoPluginManager();
+			pluginManager = new BrojoPluginManager(this);
+			BrojoPluginLoader.registerPluginManager(pluginManager);
+			pluginManager.loadPlugins();
 			userInfo = new UserInfo("BrojoBot.xml");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -56,9 +61,7 @@ public class BrojoBot implements IConnector {
 
 			input.start();
 			output.start();
-			
-			System.out.println("hm");
-		
+
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -89,15 +92,20 @@ public class BrojoBot implements IConnector {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		BrojoPluginLoader.loadPlugins();
 		BrojoBot brojo = new BrojoBot();
 		
 		brojo.start();
-
 	}
 
 	@Override
 	public void sendf(String contents, Object... args) {
 		send(String.format(contents, args));		
+	}
+
+	@Override
+	public void onMessageReceived(String serverMsg, Message msg) {
+		pluginManager.onMessageReceived(msg);		
 	}
 
 }

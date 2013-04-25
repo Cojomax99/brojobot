@@ -2,6 +2,8 @@ package net.brojo.irc;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -64,6 +66,10 @@ public class InfoMarshaller{
 	
 	public String getPass() {
 		return getAttribute("pass");
+	}
+	
+	public List<String> getChannels() {
+		return Arrays.asList(getAttribute("channels").split(",", 50));
 	}
 	
 	//TODO: Setters

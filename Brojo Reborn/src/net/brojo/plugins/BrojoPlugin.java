@@ -1,5 +1,6 @@
 package net.brojo.plugins;
 
+import net.brojo.irc.IConnector;
 import net.brojo.message.Message;
 
 /**
@@ -35,8 +36,9 @@ public abstract class BrojoPlugin {
 	
 	/**
 	 * Triggered when any of the registered keywords or commands are detected
+	 * @param impl Implementor instance
 	 * @param message Message containing all details of said received message
 	 * @return true if completed successfully
 	 */
-	public abstract boolean onActivated(Message message);
+	public abstract boolean onActivated(IConnector impl, Message message);
 }

@@ -1,14 +1,14 @@
-package net.brojo.plugins;
+package net.brojo.pluginimpl;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
+import net.brojo.irc.IConnector;
 import net.brojo.message.Message;
+import net.brojo.plugins.BrojoPlugin;
 
 /**
  * Handles the instantiation of brojo plugins
- * 
- * @author Cojomax99
  */
 public class BrojoPluginManager {
 
@@ -17,8 +17,23 @@ public class BrojoPluginManager {
 	 */
 	private HashMap<Class<? extends BrojoPlugin>, Boolean> pluginInstances = new HashMap<Class<? extends BrojoPlugin>, Boolean>();
 	
-	public BrojoPluginManager() {
-		
+	/**
+	 * Connector instance
+	 */
+	private IConnector impl;
+	
+	
+	public BrojoPluginManager(IConnector impl) {
+		this.impl = impl;
+	}
+	
+	/**
+	 * Loads plugins
+	 */
+	public void loadPlugins() {
+		for (Class<? extends BrojoPlugin> c : BrojoPluginLoader.pluginList) {
+			loadPlugin(c);
+		}
 	}
 
 	/**
@@ -26,14 +41,15 @@ public class BrojoPluginManager {
 	 * @param m Message received from server
 	 */
 	public void onMessageReceived(Message m) {
+		
 		for (Class<? extends BrojoPlugin> clazz : pluginInstances.keySet()) {
 			try {
-				Method accepts = clazz.getDeclaredMethod("accepts", Boolean.TYPE);
+				Method accepts = clazz.getDeclaredMethod("accepts", Message.class);
 				Object o = accepts.invoke(null, m);
 				
 				if ((Boolean)o) {
 					BrojoPlugin plugin = clazz.newInstance();
-					plugin.onActivated(m);
+					plugin.onActivated(impl, m);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -1,0 +1,10 @@
+<?xml version= "1.0"?>
+<brojo>
+  <nick>BrojoBot</nick>
+  <realname>Brojo</realname>
+  <username>BrojoBot</username>
+  <version>0.01</version>
+  <quitmsg>Goodbye : (</quitmsg>
+  <pass>genericpassword</pass>
+  <channels>#Tropicraft,#BrojoBot</channels>
+</brojo>
