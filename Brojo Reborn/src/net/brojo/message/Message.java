@@ -25,6 +25,11 @@ public class Message {
 				serverMsg.split("PRIVMSG")[1].split(" :")[0].substring(1), 
 				serverMsg.split(serverMsg.split("PRIVMSG")[1].split(" :")[0].substring(1) + " :", 2)[1]);
 	}
+	
+	public Message respond(String newContents) {
+		this.contents = newContents;
+		return this;
+	}
 
 	public static Message createMessage(String input) {
 

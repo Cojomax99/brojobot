@@ -1,12 +1,12 @@
 package net.brojo.plugins;
- 
+
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
-
+ 
 import net.brojo.irc.IConnector;
 import net.brojo.message.Message;
  
@@ -17,7 +17,7 @@ public class EpicTalePlugin extends BrojoPlugin {
  
     @Override
     public String getName() {
-    	return "Newthead's Epic Tale";
+      return "Newthead's Epic Tale";
 	}
  
 	@Override
@@ -39,8 +39,8 @@ public class EpicTalePlugin extends BrojoPlugin {
 	}
  
 	@Override
-	public boolean onActivated(IConnector impl, Message message) {
-		String channel = message.getRecipient();
+	public boolean onActivated(final IConnector impl, Message message) {
+		final String channel = message.getRecipient();
 		String[] parseMessage = message.getContents().trim().split("\\s+", 2);
  
         if (true) {
@@ -48,19 +48,23 @@ public class EpicTalePlugin extends BrojoPlugin {
             if (parseMessage.length > 1 && parseMessage[1].equalsIgnoreCase("stop")) {
                 stopRunning(channel);
             } else if (!isRunning.contains(channel)) {
-                isRunning.add(channel);
-                for (int storyLine = 0; storyLine < story.size() && isRunning.contains(channel); storyLine++) {
-                    String line = base64decode(story.get(storyLine));
-                    if (line != null && !line.isEmpty()) {
-                        impl.send(channel, line);
-                        try {
-                            Thread.sleep((new Random()).nextInt(line.length()) * 70 + 6000);
-                        } catch (InterruptedException ex) {
-                            System.err.println(ex.getMessage());
+                new Thread() {
+                    public void run() {
+                        isRunning.add(channel);
+                        for (int storyLine = 0; storyLine < story.size() && isRunning.contains(channel); storyLine++) {
+                            String line = base64decode(story.get(storyLine));
+                            if (line != null && !line.isEmpty()) {
+                                impl.send(channel, line);
+                                try {
+                                    Thread.sleep((new Random()).nextInt(line.length()) * 70 + 6000);
+                                } catch (InterruptedException ex) {
+                                    System.err.println(ex.getMessage());
+                                }
+                            }
                         }
+                        isRunning.remove(channel);
                     }
-                }
-                isRunning.remove(channel);
+                }.start();
             }
         }
 		return true;

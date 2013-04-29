@@ -10,16 +10,16 @@ public class Commands {
 	 * @param impl IConnector implementation
 	 */
 	public static void NICK(IConnector impl) {
-		impl.sendf("NICK", impl.getUserInfo().getNick());
+		impl.sendf("NICK %s", impl.getUserInfo().getNick());
 	}
 	
 	public static void NICK(IConnector impl, String newNick) {
 		impl.getUserInfo().setNick(newNick);
-		impl.sendf("NICK", newNick);
+		impl.sendf("NICK %s", newNick);
 	}
 	
 	public static void IDENT(IConnector impl) {
-		impl.sendf("IDENT", impl.getUserInfo().getPass());
+		impl.sendf("IDENT %s", impl.getUserInfo().getPass());
 	}
 	
 	/**

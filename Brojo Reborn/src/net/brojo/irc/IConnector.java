@@ -29,6 +29,12 @@ public interface IConnector {
 	public void sendf(String contents, Object...args);
 	
 	/**
+	 * Method that sends a Message in Message format
+	 * @param msg Message to send
+	 */
+	public void send(Message msg);
+	
+	/**
 	 * Simple getter for a UserInfo instance
 	 * @return getUserInfo
 	 */

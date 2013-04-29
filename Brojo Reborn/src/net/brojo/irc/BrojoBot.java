@@ -110,8 +110,12 @@ public class BrojoBot implements IConnector {
 
 	@Override
 	public void setNick(String nick) {
-		this.userInfo.setNick(newNick);
 		Commands.NICK(this, nick);
+	}
+
+	@Override
+	public void send(Message msg) {
+		output.send(msg);
 	}
 
 }
