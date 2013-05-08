@@ -20,22 +20,22 @@ public class BrojoBot implements IConnector {
 	 * UserInfo object that stores all data about this user
 	 */
 	private UserInfo userInfo;
-	
+
 	/**
 	 * Thread for receiving messages from server
 	 */
 	private ThreadedInput input;
-	
+
 	/**
 	 * Thread for sending messages to the server
 	 */
 	private ThreadedOutput output;
-	
+
 	/**
 	 * Plugin manager instance for this implementor
 	 */
 	public BrojoPluginManager pluginManager;
-	
+
 	public BrojoBot() {
 		try {
 			pluginManager = new BrojoPluginManager(this);
@@ -46,14 +46,14 @@ public class BrojoBot implements IConnector {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Initiate IRC connection
 	 */
 	private void start() {
 		try{
 			//load plugins
-			
+
 			final Socket sock = new Socket("irc.esper.net",6667);
 
 			input = new ThreadedInput(this, new BufferedReader(new InputStreamReader(sock.getInputStream())));
@@ -66,11 +66,11 @@ public class BrojoBot implements IConnector {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public UserInfo getUserInfo() {
 		return this.userInfo;
 	}
-	
+
 	/**
 	 * Sends a message to the server with no intended recipient other than the server itself
 	 * @param contents message contents to send
@@ -78,7 +78,7 @@ public class BrojoBot implements IConnector {
 	public void send(String contents) {
 		output.send(new Message(null, null, contents));
 	}
-	
+
 	/**
 	 * Sends a message to the server with an intended recipient
 	 * @param recipient user/channel to send the message to
@@ -94,7 +94,7 @@ public class BrojoBot implements IConnector {
 	public static void main(String[] args) {
 		BrojoPluginLoader.loadPlugins();
 		BrojoBot brojo = new BrojoBot();
-		
+
 		brojo.start();
 	}
 
@@ -116,6 +116,13 @@ public class BrojoBot implements IConnector {
 	@Override
 	public void send(Message msg) {
 		output.send(msg);
+	}
+
+	@Override
+	public void onCTCPReceived(String sender, String msg) {
+		if(msg.toLowerCase().equals("version")){
+			Commands.NOTICE(this, sender, "VERSION BrojoBot "+userInfo.getVersion());
+		}
 	}
 
 }
