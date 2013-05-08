@@ -69,5 +69,13 @@ public class Commands {
 	public static void NOTICE(IConnector impl, String target, String message) {
 		impl.sendf("NOTICE %s :\u0001%s\u0001", target, message);
 	}
+	
+	public static void ACTION(IConnector impl, String target, String message) {
+		impl.sendf("PRIVMSG %s :\u0001ACTION %s\u0001", target, message);
+	}
+	
+	public static void PART(IConnector impl, String target, String partingChan) {
+		impl.sendf("PART %s", partingChan);
+	}
 
 }

@@ -10,9 +10,9 @@ import net.brojo.message.Message;
 public class ThreadedInput extends Thread {
 
 	private boolean isRunning = false;
-	
+
 	private BufferedReader reader;
-	
+
 	private IConnector bot;
 
 	public ThreadedInput(IConnector bot, BufferedReader reader) {
@@ -27,7 +27,7 @@ public class ThreadedInput extends Thread {
 		boolean loggedIn = false;
 		net.brojo.message.Message message = null;
 		String serverMsg = null;
-		
+
 		while (isRunning) {
 			try {
 				if (!loggedIn) {
@@ -40,38 +40,42 @@ public class ThreadedInput extends Thread {
 
 				while ((serverMsg = reader.readLine()) != null) {
 					System.out.println(serverMsg);
-					
+
 					parseIO(serverMsg);
 
 					//TODO: Eventually outsource this to a simple bot.processInput call
 					if (serverMsg.split(" :", 1)[0].contains(" PRIVMSG ")) {
 						message = Message.createMessageFromRaw(serverMsg);
-						
+
 						if (message.getContents().toLowerCase().equals("r brojobot")) {
 							bot.send(message.getRecipient(), "Hello, " + message.getSender());
 						}
-						
-						bot.onMessageReceived(serverMsg, message);
-						
+
+						if(message.getContents().toLowerCase().startsWith("\u0001")){
+							bot.onCTCPReceived(message.getSender(), message.getContents().toLowerCase().split("\u0001")[1]);
+						}else{
+							bot.onMessageReceived(serverMsg, message);
+						}
+
 						message = null;
 					} else
 						if (serverMsg.split(" :", 1)[0].contains(" JOIN ")) {
 							String name = serverMsg.split("JOIN")[0].split("!")[0].substring(1);
-							
+
 							if (name.toLowerCase().startsWith("frox")) {
 								bot.send(serverMsg.split("JOIN")[1].split(" :")[0].substring(1), "Who's that lady?");
 							}
 						}
-						
+
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		
+
 			//do stuff
 		}
 	}
-	
+
 	/**
 	 * @param output
 	 *            This is the output from the BufferedReader from the Socket
@@ -92,7 +96,7 @@ public class ThreadedInput extends Thread {
 		}
 		// username in use -- CURRENTLY DOES NOT WORK :(
 		if (output.split(" ")[1].contains("433")) {
-		//	nick = output.split(" ")[3] + "_";
+			//	nick = output.split(" ")[3] + "_";
 			Commands.NICK(bot, output.split(" ")[3] + "_");
 		}
 
