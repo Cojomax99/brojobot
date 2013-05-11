@@ -19,7 +19,7 @@ public class Commands {
 	}
 
 	public static void IDENT(IConnector impl) {
-		impl.sendf("IDENT %s", impl.getUserInfo().getPass());
+		impl.sendf("IDENT :%s", impl.getUserInfo().getPass());
 	}
 
 	/**

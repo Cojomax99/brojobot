@@ -22,7 +22,7 @@ public class OuOPlugin extends BrojoPlugin {
 	}
 
 	public static boolean accepts(Message m){
-		return m.getContents().toLowerCase().contains("ouo");
+		return m.getContents().toLowerCase().replace("", "").contains("ouo");
 	}
 
 	@Override

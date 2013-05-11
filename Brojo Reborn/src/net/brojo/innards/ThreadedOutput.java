@@ -50,7 +50,7 @@ public class ThreadedOutput extends Thread {
 				sleep(1L);
 				while(!messageQueue.isEmpty())
 				{
-					out(messageQueue.poll().toString() + "\n");
+					out(messageQueue.poll().toString() + "\r\n");
 				}
 				sleep(1L);
 			}
