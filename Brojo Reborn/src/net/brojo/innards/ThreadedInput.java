@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 
 import net.brojo.connection.IConnector;
 import net.brojo.irc.Commands;
+import net.brojo.irc.IRCLine;
 import net.brojo.message.Message;
 
 public class ThreadedInput extends Thread {
@@ -28,7 +29,6 @@ public class ThreadedInput extends Thread {
 	@Override
 	public void run() {
 		boolean loggedIn = false;
-		net.brojo.message.Message message = null;
 		String serverMsg = null;
 
 		while (isRunning) {
@@ -42,34 +42,9 @@ public class ThreadedInput extends Thread {
 				sleep(1L);
 
 				while ((serverMsg = reader.readLine()) != null) {
-					System.out.println(serverMsg);
-
-					parseIO(serverMsg);
-
-					//TODO: Eventually outsource this to a simple bot.processInput call
-					if (serverMsg.split(" :", 1)[0].contains(" PRIVMSG ")) {
-						message = Message.createMessageFromRaw(serverMsg);
-
-						if (message.getContents().toLowerCase().equals("r brojobot")) {
-							bot.send(message.getRecipient(), "Hello, " + message.getSender());
-						}
-
-						if(message.getContents().toLowerCase().startsWith("\u0001")){
-							bot.onCTCPReceived(message.getSender(), message.getContents().toLowerCase().split("\u0001")[1]);
-						}else{
-							bot.onMessageReceived(serverMsg, message);
-						}
-
-						message = null;
-					} else
-						if (serverMsg.split(" :", 1)[0].contains(" JOIN ")) {
-							String name = serverMsg.split("JOIN")[0].split("!")[0].substring(1);
-
-							if (name.toLowerCase().startsWith("frox")) {
-								bot.send(serverMsg.split("JOIN")[1].split(" :")[0].substring(1), "Who's that lady?");
-							}
-						}
-
+					System.out.println(serverMsg.trim());
+					IRCLine line = IRCLine.parse(serverMsg);
+					parseIO(line);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -84,32 +59,64 @@ public class ThreadedInput extends Thread {
 	 *            This is the output from the BufferedReader from the Socket
 	 *            (Encompasses all channels)
 	 */
-	private void parseIO(String output) {
-		// Answer pings
-		if (output.startsWith("PING :")) {
-			Commands.PONG(bot, output.substring(5));
-		}
+	private void parseIO(IRCLine line) {
+		//TODO: Eventually outsource this to a simple bot.processInput call
+		if (line.getCommand().equals("PRIVMSG")) {
+			Message message = Message.createMessageFromRaw(line.getRaw());
 
-		// fired when succesfully connected to the server.
+			if (message.getContents().toLowerCase().equals("r brojobot")) {
+				bot.send(message.getRecipient(), "Hello, " + message.getSender());
+			}
+
+			if(message.getContents().toLowerCase().startsWith("\u0001")){
+				bot.onCTCPReceived(message.getSender(), message.getContents().toLowerCase().split("\u0001")[1]);
+			}else{
+				bot.onMessageReceived(line.getRaw(), message);
+			}
+			return;
+		}
+		
+		if (line.getCommand().equals("JOIN")) {
+			String nick = line.getNick();
+
+			if (nick.toLowerCase().startsWith("frox")) {
+				String channel = line.getParam(0);
+				bot.send(channel, "Who's that lady?");
+			}
+		}
+		
+		if (line.getCommand().equals("PING")) {
+			Commands.PONG(bot, line.getParam(0));
+			return;
+		}
+		
+		// fired when successfully connected to the server.
+		// TODO add delay after identifying so we can join invite only channels, perhaps listen for NickServ's reply
 		// Join channels!
-		if (output.split(" ")[1].contains("376")) {
-			System.out.println("Successfully connected to server " + output.split(" ")[0].substring(1));
-			bot.sendf("PRIVMSG nickserv identify %s %s", bot.getServerInfo().getNick(), bot.getServerInfo().getNickServPass());
+		if (line.getCommand().equals("376")) { // ENDOFMOTD
+			bot.sendf("PRIVMSG nickserv :identify %s %s", bot.getServerInfo().getNick(), bot.getServerInfo().getNickServPass());
 			Commands.JOINALL(bot);
+			return;
 		}
-		// username in use -- CURRENTLY DOES NOT WORK :(
-		if (output.split(" ")[1].contains("433")) {
-			//	nick = output.split(" ")[3] + "_";
-			Commands.NICK(bot, output.split(" ")[3] + "_");
+		
+		// username in use -- works now :) -- mrschlauch
+		if (line.getCommand().equals("433")) { // ERR_NICKNAMEINUSE
+			// remember for numerics, param 0 is our nick
+			// probably why the simple substring didn't work before
+			String newNick = line.getParam(1)+"_";
+			Commands.NICK(bot, newNick);
+			return;
 		}
-
+		
 		// join on invite
-		if (output.split(" :", 1)[0].contains(" INVITE ")) {
-			String target = output.split(bot.getServerInfo().getNick() + " :", 2)[1];
+		if (line.getCommand().equals("INVITE")) {
+			// params: <nick> <channel>
+			// http://tools.ietf.org/html/rfc1459#section-4.2.7
+			String target = line.getParam(1);
 			System.out.println("Joining " + target);
 			Commands.JOIN(bot, target);
 			bot.send(target, "o7");
+			return;
 		}
 	}
-
 }
