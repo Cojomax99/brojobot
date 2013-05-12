@@ -35,12 +35,6 @@ public interface IConnector {
 	public void send(Message msg);
 
 	/**
-	 * Simple getter for a UserInfo instance
-	 * @return getUserInfo
-	 */
-	public UserInfo getUserInfo();
-
-	/**
 	 * Called when a message is received from the server
 	 * @param serverMsg Raw message received from the server
 	 * @param msg Raw message encapsulated into a Message object
