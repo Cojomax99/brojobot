@@ -2,7 +2,7 @@ package net.brojo.plugins;
  
 import java.util.Random;
 
-import net.brojo.irc.IConnector;
+import net.brojo.connection.IConnector;
 import net.brojo.message.Message;
  
 public class DancePlugin extends BrojoPlugin {
@@ -34,10 +34,10 @@ public class DancePlugin extends BrojoPlugin {
                 String msg = "";
                 Random rand = new Random();
                 int choice = rand.nextInt(4);
-                if (choice == 0) msg = ":D]-<";
-                if (choice == 1) msg = ":D[-<";
-                if (choice == 2) msg = ":D/-<";
-                if (choice == 3) msg = ":D\\-<";
+                if (choice == 0) msg = ":\u200BD]-<";
+                if (choice == 1) msg = ":\u200BD[-<";
+                if (choice == 2) msg = ":\u200BD/-<";
+                if (choice == 3) msg = ":\u200BD\\-<";
                 impl.send(message.getRecipient(), msg);
                 return false;
         }

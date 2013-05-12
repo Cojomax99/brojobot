@@ -3,7 +3,7 @@ package net.brojo.plugins;
 import java.security.InvalidParameterException;
 import java.util.Random;
 
-import net.brojo.irc.IConnector;
+import net.brojo.connection.IConnector;
 import net.brojo.message.Message;
  
 public class GetMoneyPlugin extends BrojoPlugin {

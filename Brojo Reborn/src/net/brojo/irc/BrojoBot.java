@@ -1,127 +1,64 @@
 package net.brojo.irc;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.Socket;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.FileNotFoundException;
 
-import net.brojo.innards.ThreadedInput;
-import net.brojo.innards.ThreadedOutput;
-import net.brojo.message.Message;
+import net.brojo.connection.ConnectionManager;
 import net.brojo.pluginimpl.BrojoPluginLoader;
-import net.brojo.pluginimpl.BrojoPluginManager;
 
-public class BrojoBot implements IConnector {
-
-	/**
-	 * UserInfo object that stores all data about this user
-	 */
-	private UserInfo userInfo;
+public class BrojoBot {
 
 	/**
-	 * Thread for receiving messages from server
+	 * Static instance to use when referencing this class as a singleton
 	 */
-	private ThreadedInput input;
+	private static BrojoBot instance;
 
 	/**
-	 * Thread for sending messages to the server
+	 * Stores information for all server connections
 	 */
-	private ThreadedOutput output;
+	private ConfigManager config;
 
 	/**
-	 * Plugin manager instance for this implementor
+	 * Simple constructor that initializes the configuration manager
 	 */
-	public BrojoPluginManager pluginManager;
-
-	public BrojoBot() {
+	private BrojoBot() {
 		try {
-			pluginManager = new BrojoPluginManager(this);
-			BrojoPluginLoader.registerPluginManager(pluginManager);
-			pluginManager.loadPlugins();
-			userInfo = new UserInfo("BrojoBot.xml");
+			config = new ConfigManager("BrojoBot.json");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	/**
-	 * Initiate IRC connection
+	 * Singleton instance of BrojoBot
+	 * @return Get an instance of BrojoBot
 	 */
-	private void start() {
-		try{
-			//load plugins
-
-			final Socket sock = new Socket("irc.esper.net",6667);
-
-			input = new ThreadedInput(this, new BufferedReader(new InputStreamReader(sock.getInputStream())));
-			output = new ThreadedOutput(this, new BufferedWriter(new OutputStreamWriter(sock.getOutputStream())));
-
-			input.start();
-			output.start();
-
-		} catch(Exception e) {
-			e.printStackTrace();
+	public static BrojoBot getInstance() {
+		if (instance == null) {
+			instance = new BrojoBot();
 		}
-	}
 
-	public UserInfo getUserInfo() {
-		return this.userInfo;
-	}
-
-	/**
-	 * Sends a message to the server with no intended recipient other than the server itself
-	 * @param contents message contents to send
-	 */
-	public void send(String contents) {
-		output.send(new Message(null, null, contents));
+		return instance;
 	}
 
 	/**
-	 * Sends a message to the server with an intended recipient
-	 * @param recipient user/channel to send the message to
-	 * @param contents message contents to send
+	 * 
+	 * @return Instance of the configuration manager
 	 */
-	public void send(String recipient, String contents) {
-		output.send(new Message(null, recipient, contents));
+	public ConfigManager getConfigManager() {
+		return this.config;
 	}
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		BrojoPluginLoader.loadPlugins();
-		BrojoBot brojo = new BrojoBot();
-
-		brojo.start();
-	}
-
-	@Override
-	public void sendf(String contents, Object... args) {
-		send(String.format(contents, args));		
-	}
-
-	@Override
-	public void onMessageReceived(String serverMsg, Message msg) {
-		pluginManager.onMessageReceived(msg);		
-	}
-
-	@Override
-	public void setNick(String nick) {
-		Commands.NICK(this, nick);
-	}
-
-	@Override
-	public void send(Message msg) {
-		output.send(msg);
-	}
-
-	@Override
-	public void onCTCPReceived(String sender, String msg) {
-		if(msg.toLowerCase().equals("version")){
-			Commands.NOTICE(this, sender, "VERSION BrojoBot "+userInfo.getVersion());
+		try {
+			BrojoPluginLoader.loadPlugins();
+			BrojoBot brojo = BrojoBot.getInstance();
+			brojo.getConfigManager().load();
+			ConnectionManager.initConnections();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		}
 	}
 

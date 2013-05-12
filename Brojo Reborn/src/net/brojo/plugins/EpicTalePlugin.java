@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
  
-import net.brojo.irc.IConnector;
+import net.brojo.connection.IConnector;
 import net.brojo.message.Message;
  
 public class EpicTalePlugin extends BrojoPlugin {

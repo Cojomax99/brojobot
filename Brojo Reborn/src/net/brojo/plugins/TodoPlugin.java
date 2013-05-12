@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import net.brojo.irc.IConnector;
+
+import net.brojo.connection.IConnector;
 import net.brojo.message.Message;
  
 public class TodoPlugin extends BrojoPlugin {

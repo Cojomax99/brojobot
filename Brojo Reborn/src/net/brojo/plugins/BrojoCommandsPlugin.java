@@ -1,7 +1,7 @@
 package net.brojo.plugins;
 
+import net.brojo.connection.IConnector;
 import net.brojo.irc.Commands;
-import net.brojo.irc.IConnector;
 import net.brojo.message.Message;
 
 public class BrojoCommandsPlugin extends BrojoPlugin {
@@ -33,7 +33,8 @@ public class BrojoCommandsPlugin extends BrojoPlugin {
 
 	@Override
 	public boolean onActivated(IConnector impl, Message message) {
-		if (impl.getUserInfo().isOp(message.getSender())) {
+		if (message.getSender().equals("Cojosan") || message.getSender().equals("Cojo")
+				|| message.getSender().equals("_303")) {
 			if (message.getContents().startsWith(",nick")) {
 				System.out.printf("Changing nick to '%s'\n", message.getContents().split("\\s+", 2)[1]);
 				impl.setNick(message.getContents().split("\\s+", 2)[1].replace("\n", "").replace("\r", "").replace("\t", ""));
@@ -44,7 +45,10 @@ public class BrojoCommandsPlugin extends BrojoPlugin {
 				} else
 					if (message.getContents().startsWith(",part")) {
 						Commands.PART(impl, message.getRecipient(), message.getContents().split(",part ")[1]);
-					}
+					} else
+						if (message.getContents().startsWith(",quit")) {
+							Commands.QUIT(impl);
+						}
 		}
 
 		return true;

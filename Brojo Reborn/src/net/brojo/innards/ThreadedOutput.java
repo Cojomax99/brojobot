@@ -4,7 +4,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import net.brojo.irc.IConnector;
+import net.brojo.connection.IConnector;
 import net.brojo.message.Message;
 
 public class ThreadedOutput extends Thread {
@@ -34,6 +34,10 @@ public class ThreadedOutput extends Thread {
 		this.writer = writer;
 		this.bot = bot;
 		isRunning = true;
+	}
+	
+	public void stopThread() {
+		this.isRunning = false;
 	}
 
 	/**
@@ -73,6 +77,8 @@ public class ThreadedOutput extends Thread {
 		{
 			StringBuffer sb = new StringBuffer(s);
 			System.out.println(sb.toString());
+			//byte[] bytes = sb.toString().getBytes("UTF8"); 
+			//writer.write(bytes, 0, bytes.length);
 			writer.write(sb.toString());
 			writer.flush();			
 		}

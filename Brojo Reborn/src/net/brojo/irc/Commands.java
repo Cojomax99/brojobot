@@ -1,5 +1,7 @@
 package net.brojo.irc;
 
+import net.brojo.connection.IConnector;
+
 /**
  * Helper class for sending commands to server
  */
@@ -10,16 +12,20 @@ public class Commands {
 	 * @param impl IConnector implementation
 	 */
 	public static void NICK(IConnector impl) {
-		impl.sendf("NICK %s", impl.getUserInfo().getNick());
+		impl.sendf("NICK %s", impl.getServerInfo().getNick());
 	}
 
 	public static void NICK(IConnector impl, String newNick) {
-		impl.getUserInfo().setNick(newNick);
+		impl.getServerInfo().setNick(newNick);
 		impl.sendf("NICK %s", newNick);
 	}
 
 	public static void IDENT(IConnector impl) {
-		impl.sendf("IDENT :%s", impl.getUserInfo().getPass());
+		impl.sendf("PRIVMSG nickserv :identify %s %s", impl.getServerInfo().getNick(), impl.getServerInfo().getNickServPass());
+	}
+	
+	public static void USER(IConnector impl) {
+		impl.sendf("USER %s  8 * : %s", impl.getServerInfo().getUsername(), impl.getServerInfo().getVersion());
 	}
 
 	/**
@@ -45,7 +51,7 @@ public class Commands {
 	 * @param impl
 	 */
 	public static void JOINALL(IConnector impl) {
-		for (String s : impl.getUserInfo().getChannels()) {
+		for (String s : impl.getServerInfo().getChannels()) {
 			impl.sendf("JOIN %s", s);
 		}
 	}
@@ -78,4 +84,7 @@ public class Commands {
 		impl.sendf("PART %s", partingChan);
 	}
 
+	public static void QUIT(IConnector impl) {
+		impl.sendf("QUIT :%s", impl.getServerInfo().getQuitmsg());		
+	}
 }

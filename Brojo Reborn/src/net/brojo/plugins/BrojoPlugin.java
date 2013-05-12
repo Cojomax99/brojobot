@@ -1,6 +1,6 @@
 package net.brojo.plugins;
 
-import net.brojo.irc.IConnector;
+import net.brojo.connection.IConnector;
 import net.brojo.message.Message;
 
 /**

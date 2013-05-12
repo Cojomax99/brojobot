@@ -1,10 +1,9 @@
 package net.brojo.innards;
 
 import java.io.BufferedReader;
-import java.io.Console;
 
+import net.brojo.connection.IConnector;
 import net.brojo.irc.Commands;
-import net.brojo.irc.IConnector;
 import net.brojo.message.Message;
 
 public class ThreadedInput extends Thread {
@@ -21,6 +20,10 @@ public class ThreadedInput extends Thread {
 		this.bot = bot;
 		isRunning = true;
 	}
+	
+	public void stopThread() {
+		this.isRunning = false;
+	}
 
 	@Override
 	public void run() {
@@ -32,8 +35,8 @@ public class ThreadedInput extends Thread {
 			try {
 				if (!loggedIn) {
 
-					bot.send(String.format("USER %s  8 * : %s", bot.getUserInfo().getUserName(), bot.getUserInfo().getVersion()));
-					bot.send(String.format("NICK %s", bot.getUserInfo().getNick()));
+					Commands.USER(bot);
+					Commands.NICK(bot);
 					loggedIn = true;
 				}
 				sleep(1L);
@@ -91,7 +94,7 @@ public class ThreadedInput extends Thread {
 		// Join channels!
 		if (output.split(" ")[1].contains("376")) {
 			System.out.println("Successfully connected to server " + output.split(" ")[0].substring(1));
-			bot.sendf("PRIVMSG nickserv identify %s %s", bot.getUserInfo().getNick(), bot.getUserInfo().getPass());
+			bot.sendf("PRIVMSG nickserv identify %s %s", bot.getServerInfo().getNick(), bot.getServerInfo().getNickServPass());
 			Commands.JOINALL(bot);
 		}
 		// username in use -- CURRENTLY DOES NOT WORK :(
@@ -102,7 +105,7 @@ public class ThreadedInput extends Thread {
 
 		// join on invite
 		if (output.split(" :", 1)[0].contains(" INVITE ")) {
-			String target = output.split(bot.getUserInfo().getNick() + " :", 2)[1];
+			String target = output.split(bot.getServerInfo().getNick() + " :", 2)[1];
 			System.out.println("Joining " + target);
 			Commands.JOIN(bot, target);
 			bot.send(target, "o7");

@@ -7,7 +7,7 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.brojo.irc.IConnector;
+import net.brojo.connection.IConnector;
 import net.brojo.message.Message;
 
 public class FroxSearchPlugin extends BrojoPlugin {

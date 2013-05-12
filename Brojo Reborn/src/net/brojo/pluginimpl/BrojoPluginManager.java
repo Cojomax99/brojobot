@@ -3,7 +3,7 @@ package net.brojo.pluginimpl;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
-import net.brojo.irc.IConnector;
+import net.brojo.connection.IConnector;
 import net.brojo.message.Message;
 import net.brojo.plugins.BrojoPlugin;
 
