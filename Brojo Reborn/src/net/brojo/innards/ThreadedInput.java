@@ -40,6 +40,11 @@ public class ThreadedInput extends Thread {
 					loggedIn = true;
 				}
 				sleep(1L);
+				
+				if ((serverMsg = reader.readLine()) == null) {
+					isRunning=false;
+					break;
+				}
 
 				while ((serverMsg = reader.readLine()) != null) {
 					System.out.println(serverMsg.trim());

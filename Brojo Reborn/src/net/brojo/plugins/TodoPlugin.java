@@ -82,7 +82,7 @@ public class TodoPlugin extends BrojoPlugin {
 	}
     
     private List<String> deleteNote(List<String> l, int index) {
-        List<String> newList = new ArrayList<>();
+        List<String> newList = new ArrayList<String>();
         for (int i = 0; i < l.size(); i++) {
             if (i != index) {
                 newList.add(l.get(i));
@@ -93,7 +93,7 @@ public class TodoPlugin extends BrojoPlugin {
     
     private List<String> loadFromFile(String filename) {
         
-        List<String> l = new ArrayList<>();
+        List<String> l = new ArrayList<String>();
         fileLock.lock();
         try {
             try (BufferedReader r = new BufferedReader(new FileReader(filename + fileext))) {

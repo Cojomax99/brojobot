@@ -2,6 +2,9 @@ package net.brojo.connection;
 
 import java.util.List;
 
+import net.brojo.message.Message;
+import net.brojo.util.Utils;
+
 /**
  * Simple class that contains getters and setters for all information for a single server instance
  *
@@ -67,6 +70,21 @@ public class ServerInfo {
 	 * Name used locally as a unique "id" for a server.
 	 */
 	private String localName;
+	
+	private List<String> admins;
+	
+	/**
+	 * Compares a username and hostmask against the list of valid admin username and hostmasks
+	 * @param message Message that was sent
+	 * @return Whether the user who sent the message is an admin or not
+	 */
+	public boolean isAdmin(Message message) {
+		for (String s : admins) {
+			if (Utils.matchesMask(s, sender)) {
+				
+			}
+		}
+	}
 
 	/**
 	 * @return the username

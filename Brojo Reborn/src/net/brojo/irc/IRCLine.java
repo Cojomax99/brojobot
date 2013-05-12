@@ -7,7 +7,6 @@ import java.util.List;
 
 /**
  * Represents an incoming IRC Line, parsed into usable parts.
- * @author mrschlauch
  */
 public class IRCLine {
 	private String raw;

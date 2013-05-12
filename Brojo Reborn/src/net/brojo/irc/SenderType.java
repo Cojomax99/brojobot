@@ -2,7 +2,6 @@ package net.brojo.irc;
 
 /**
  * Type of incoming IRC line prefix
- * @author mrschlauch
  */
 public enum SenderType {
 	/**
