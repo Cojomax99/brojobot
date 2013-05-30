@@ -80,10 +80,11 @@ public class ServerInfo {
 	 */
 	public boolean isAdmin(Message message) {
 		for (String s : admins) {
-			if (Utils.matchesMask(s, sender)) {
-				
+			if (Utils.matchesMask(s, message.getSender())) {
+				return true;
 			}
 		}
+		return false;
 	}
 
 	/**
