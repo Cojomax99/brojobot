@@ -13,7 +13,8 @@
     "server":"irc.rozznet.net",
     "port":6667,
     "connectOnStartup":true,
-    "localName":"BrojoNet"
+    "localName":"BrojoNet",
+    "outputRaw":true
   },
   {
     "username":"BrozzleBot",
@@ -29,6 +30,7 @@
     "server":"irc.rozznet.net",
     "port":6667,
     "connectOnStartup":true,
-    "localName":"BrojoNet2"
+    "localName":"BrojoNet2",
+    "outputRaw":true
   }
 ]

@@ -70,6 +70,11 @@ public class ServerInfo {
 	 * Name used locally as a unique "id" for a server.
 	 */
 	private String localName;
+
+	/**
+	 * Output information from IRC
+	 */
+	private boolean useOutput;
 	
 	private List<String> admins;
 	
@@ -253,6 +258,20 @@ public class ServerInfo {
 	 */
 	public void setLocalName(String localName) {
 		this.localName = localName;
+	}
+	
+	/**
+	 * @return if the client should output information
+	 */
+	public boolean shouldUseOutput() {
+		return useOutput;
+	}
+	
+	/**
+	 * @param shouldOutput should the client output information from the IRC connection?
+	 */
+	public void setLocalName(boolean shouldOutput) {
+		this.useOutput = shouldOutput;
 	}
 	
 }

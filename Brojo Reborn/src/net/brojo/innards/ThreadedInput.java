@@ -47,7 +47,8 @@ public class ThreadedInput extends Thread {
 				}
 
 				while ((serverMsg = reader.readLine()) != null) {
-					System.out.println(serverMsg.trim());
+					if(bot.getServerInfo().shouldUseOutput())
+						System.out.println(serverMsg.trim());
 					IRCLine line = IRCLine.parse(serverMsg);
 					parseIO(line);
 				}
@@ -118,7 +119,8 @@ public class ThreadedInput extends Thread {
 			// params: <nick> <channel>
 			// http://tools.ietf.org/html/rfc1459#section-4.2.7
 			String target = line.getParam(1);
-			System.out.println("Joining " + target);
+			if(bot.getServerInfo().shouldUseOutput())
+				System.out.println("Joining " + target);
 			Commands.JOIN(bot, target);
 			bot.send(target, "o7");
 			return;

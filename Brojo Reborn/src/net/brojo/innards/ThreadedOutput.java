@@ -76,7 +76,8 @@ public class ThreadedOutput extends Thread {
 		try 
 		{
 			StringBuffer sb = new StringBuffer(s);
-			System.out.println(sb.toString());
+			if(bot.getServerInfo().shouldUseOutput())
+				System.out.println(sb.toString());
 			//byte[] bytes = sb.toString().getBytes("UTF8"); 
 			//writer.write(bytes, 0, bytes.length);
 			writer.write(sb.toString());
@@ -90,7 +91,8 @@ public class ThreadedOutput extends Thread {
 	
 	public synchronized void send(Message msg)
 	{
-		System.out.println("Sending message" + msg.getContents() + " from " + msg.getSender() + " to " + msg.getRecipient());
+		if(bot.getServerInfo().shouldUseOutput())
+			System.out.println("Sending message" + msg.getContents() + " from " + msg.getSender() + " to " + msg.getRecipient());
 		messageQueue.offer(msg);
 	}
 
