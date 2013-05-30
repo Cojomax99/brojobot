@@ -14,7 +14,7 @@
     "port":6667,
     "connectOnStartup":true,
     "localName":"BrojoNet",
-    "outputRaw":true
+    "useOutput":true
   },
   {
     "username":"BrozzleBot",
@@ -31,6 +31,6 @@
     "port":6667,
     "connectOnStartup":true,
     "localName":"BrojoNet2",
-    "outputRaw":true
+    "useOutput":true
   }
 ]
