@@ -25,7 +25,7 @@ public class Commands {
 	}
 	
 	public static void USER(IConnector impl) {
-		impl.sendf("USER %s  8 * : %s", impl.getServerInfo().getUsername(), impl.getServerInfo().getVersion());
+		impl.sendf("USER %s  8 * : %s", impl.getServerInfo().getUsername(), impl.getServerInfo().getRealname());
 	}
 
 	/**
